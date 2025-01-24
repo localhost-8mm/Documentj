@@ -1,1 +1,66 @@
 
+SET A 
+1. Create a student table with fields roll number, name, percentage. Insert values in the 
+table. Display all the details of the student table in a tabular format on the screen (using 
+swing). 
+:----------------
+
+
+======================================================================================================================
+2. Write a program to display information about the database and list all the tables in the 
+database. (Use DatabaseMetaData). 
+:--------------------
+
+
+========================================================================================================================
+3. Write a program to display information about all columns in the student table. (Use 
+ResultSetMetaData). 
+:----------------
+
+
+========================================================================================================================
+SET B 
+1. Write a menu driven program (Command line interface) to perform the following 
+operations on student table. 
+ 1. Insert 2. Modify 3. Delete 4. Search 5. View All 6. Exit 
+ :-----------------
+
+ ======================================================================================================================
+2. Design a following Phone Book Application Screen using swing & write a code for 
+various operations like Delete, Update, Next, Previous. Raise an appropriate 
+exception if invalid data is entered like name left blank and negative phone Number. 
+NAME 
+ADDRESS 
+PHONE 
+EMAIL 
+<< DELETE UPDATE >> EXIT
+:-------------------------
+
+
+=========================================================================================================================
+SET C 
+1. Create tables : Course (id, name, instructor) and Student (id, name). Course and 
+Student have a many to many relationship. Create a GUI based system for performing the 
+following operations on the tables: 
+Course: Add Course, View All students of a specific course 
+Student: Add Student, Delete Student, View All students, Search student
+:-------------------------
+
+
+======================================================================================================================
+2. Design a GUI to perform the following operations on Telephone user data. 
+i. Add record ii. Display current bill 
+Add record stores the details of a telephone user in a database. User has the following 
+attributes: User (id, name, telephone number, number of calls, month, year). 
+Display current bill should Calculate and display the bill for a specific user (search by 
+name or phone number) using the following rules. Provide button to Search user on basis 
+of telephone number or name. 
+Rules: The first 100 calls are free and rent is Rs. 300) 
+No. Of Calls Charge (per call) 
+> 100 and <=500 Rs. 1.00 
+> 500 Rs. 1.30
+:------------------------------
+
+
+
+=============================================================================================================================
