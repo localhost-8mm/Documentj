@@ -1,1 +1,34 @@
 
+SET A 
+ 1. Write a Program to make use of following JSP implicit objects: 
+i. out: To display current Date and Time. 
+ii. request: To get header information. 
+iii. response: To Add Cookie 
+iv. config: get the parameters value defined in <init-param> 
+v. application: get the parameter value defined in <context-param> 
+vi. session: Display Current Session ID 
+vii. pageContext: To set and get the attributes. 
+viii. page: get the name of Generated Servlet 
+:--------------------------
+
+=====================================================================================================================
+2. Create a JSP page which will accept the file extension and display all files in the 
+current directory having that extension. Each filename should appear as a hyperlink on 
+screen. 
+:--------------------------
+
+=====================================================================================================================
+SET B 
+ 1. Create a JSP page, which accepts user name in a text box and greets the user 
+according to the time on server side. Example: User name : ABC 
+Output : Good morning ABC / Good Afternoon ABC/ Good Evening ABC 
+:--------------------------
+
+=====================================================================================================================
+2. Create a JSP page for an online multiple choice test. The questions are randomly 
+selected from a database and displayed on the screen. The choices are displayed using 
+radio buttons. When the user clicks on next, the next question is displayed. When the user 
+clicks on submit, display the total score on the screen.
+:--------------------------
+
+=====================================================================================================================
