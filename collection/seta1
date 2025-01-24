@@ -4,6 +4,37 @@ sorted order. The collection should not accept duplicate elements. (Use a suitab
 collection). Search for an particular element using predefined search method in the 
 Collection framework. 
 :---------------------
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args) {
+        TreeSet<Integer> ts = new TreeSet<>();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the number of integers: ");
+        int n = sc.nextInt();
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter data: ");
+            int num = sc.nextInt();
+            ts.add(num);
+        }
+
+        System.out.println("Sorted Collection is: " + ts);
+
+        System.out.print("Enter number to search: ");
+        int snum = sc.nextInt();
+
+        if (ts.contains(snum)) {
+            System.out.println("Number " + snum + " is present");
+           
+        } else {
+            System.out.println("Number " + snum + " is not present");
+        }
+
+        sc.close();
+    }
+}
 
 =========================================================================================================================
 2. Construct a linked List containing names of colors: red, blue, yellow and orange. Then 
@@ -13,12 +44,80 @@ ii. Display the contents of the List in reverse order using a ListIterator;
 iii. Create another list containing pink and green. Insert the elements of this list 
 between blue and yellow. 
 :-------------------
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        LinkedList<String> ll = new LinkedList<>();
+
+        ll.add("Red");
+        ll.add("Blue");
+        ll.add("Yellow");
+        ll.add("Orange");
+
+        ListIterator<String> ir = ll.listIterator();
+
+        System.out.println("Original List:");
+        while (ir.hasNext()) {
+            System.out.println(ir.next());
+        }
+
+        System.out.println("List in Reverse Order:");
+        while (ir.hasPrevious()) {
+            System.out.println(ir.previous());
+        }
+
+        LinkedList<String> newll = new LinkedList<>();
+        newll.add("Pink");
+        newll.add("Green");
+
+        ll.addAll(2, newll); // Adds "Pine" and "Green" at index 2
+        System.out.println("Updated List: " + ll);
+    }
+}
 
 ============================================================================================================================
 
 3. Create a Hash table containing student name and percentage. Display the details of the 
 hash table. Also search for a specific student and display percentage of that student. 
 :-------------------------------
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args) {
+
+        // Create a Hashtable
+        Hashtable<String, Double> s = new Hashtable<>();
+
+        // Add entries to the Hashtable
+        s.put("AAA", 85.5);
+        s.put("BBB", 78.43);
+        s.put("CCC", 74.20);
+
+        // Display the Hashtable
+        System.out.println("Student Details: ");
+        Enumeration<String> names = s.keys();
+
+        while (names.hasMoreElements()) {
+            String nm = names.nextElement();
+            System.out.println(nm + ": " + s.get(nm));
+        }
+
+        // Search for a student's percentage
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the student's name to search: ");
+        String sname = sc.nextLine();
+
+        if (s.containsKey(sname)) {
+            System.out.println(sname + "'s percentage: " + s.get(sname));
+        } else {
+            System.out.println("Student not found");
+        }
+
+        sc.close();
+    }
+}
 
 ==================================================================================================================
 SET B 
@@ -28,6 +127,122 @@ collection. The GUI ahould allow the following operations:
  ii. Remove a city from the collection 
  iii. Search for a cityname and display the code 
 :------------------------
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.*;
+
+public class Clc4 extends JFrame implements ActionListener {
+
+    JButton b1, b2, b3;
+    JTextField t, t1, t2, t3, t4;
+    HashMap<String, Integer> hs = new HashMap<>();
+
+    public Clc4() {
+        setLayout(null);
+
+        // Input fields
+        t1 = new JTextField();
+        t1.setSize(100, 30);
+        t1.setLocation(150, 30);
+        add(t1);
+
+        t2 = new JTextField();
+        t2.setSize(100, 30);
+        t2.setLocation(270, 30);
+        add(t2);
+
+        t3 = new JTextField();
+        t3.setSize(100, 30);
+        t3.setLocation(150, 80);
+        add(t3);
+
+        t4 = new JTextField();
+        t4.setSize(100, 30);
+        t4.setLocation(270, 80);
+        add(t4);
+
+        t = new JTextField();
+        t.setSize(300, 200);
+        t.setLocation(50, 130);
+        t.setEditable(false);
+        add(t);
+
+        // Buttons
+        b1 = new JButton("Add");
+        b1.setSize(100, 30);
+        b1.setLocation(50, 350);
+        add(b1);
+
+        b2 = new JButton("Remove");
+        b2.setSize(100, 30);
+        b2.setLocation(170, 350);
+        add(b2);
+
+        b3 = new JButton("Search");
+        b3.setSize(100, 30);
+        b3.setLocation(290, 350);
+        add(b3);
+
+        // Add Action Listeners
+        b1.addActionListener(this);
+        b2.addActionListener(this);
+        b3.addActionListener(this);
+
+        // JFrame properties
+        setTitle("Collection GUI");
+        setSize(450, 450);
+        setLocation(200, 100);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == b1) { // Add
+            String text1 = t1.getText();
+            try {
+                int text2 = Integer.parseInt(t2.getText());
+                hs.put(text1, text2);
+
+                StringBuilder sb = new StringBuilder();
+                for (Map.Entry<String, Integer> entry : hs.entrySet()) {
+                    sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+                }
+                t.setText(sb.toString());
+            } catch (NumberFormatException ex) {
+                t.setText("Error: Please enter a valid number.");
+            }
+
+        } else if (e.getSource() == b2) { // Remove
+            String text3 = t3.getText();
+            if (hs.containsKey(text3)) {
+                hs.remove(text3);
+
+                StringBuilder sb = new StringBuilder();
+                for (Map.Entry<String, Integer> entry : hs.entrySet()) {
+                    sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+                }
+                t.setText(sb.toString());
+            } else {
+                t.setText("City not found to remove.");
+            }
+
+        } else if (e.getSource() == b3) { // Search
+            String text4 = t4.getText();
+            if (hs.containsKey(text4)) {
+                int code = hs.get(text4);
+                t.setText("Search found: " + text4 + " -> " + code);
+            } else {
+                t.setText("City not found.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new Clc4();
+    }
+}
 
 ===================================================================================================================
 SET C 
@@ -36,6 +251,104 @@ program should then display a menu which performs the following operations on th
 1. Insert line 2. Delete line 3. Append line 4. Modify line 5. Exit 
 When the user selects Exit, save the contents of the list to the file and end the program.
 :------------------------------
+import java.io.*;
+import java.util.*;
 
+public class Main{
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Usage: java C5 <filename>");
+            return;
+        }
+
+        String filename = args[0];
+        List<String> lines = new ArrayList<>();
+
+        // Read the file into the list
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line = br.readLine();
+            while (line != null) {
+                lines.add(line);
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+            return;
+        }
+
+        Scanner sc = new Scanner(System.in);
+        int ch;
+
+        while (true) {
+            System.out.println("\n1. Insert\n2. Delete\n3. Append\n4. Modify\n5. Exit");
+            System.out.print("Enter your choice: ");
+            ch = sc.nextInt();
+            sc.nextLine(); // Consume newline
+
+            switch (ch) {
+                case 1: // Insert
+                    System.out.print("Enter line to insert: ");
+                    String newLine = sc.nextLine();
+                    System.out.print("Enter position to insert (0-based index): ");
+                    int pos = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                    if (pos <= lines.size() && pos >= 0) {
+                        lines.add(pos, newLine);
+                        System.out.println("Line inserted successfully.");
+                    } else {
+                        System.out.println("Invalid position.");
+                    }
+                    break;
+
+                case 2: // Delete
+                    System.out.print("Enter position to delete (0-based index): ");
+                    int delPos = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                    if (delPos < lines.size() && delPos >= 0) {
+                        lines.remove(delPos);
+                        System.out.println("Line deleted successfully.");
+                    } else {
+                        System.out.println("Invalid position.");
+                    }
+                    break;
+
+                case 3: // Append
+                    System.out.print("Enter line to append: ");
+                    lines.add(sc.nextLine());
+                    System.out.println("Line appended successfully.");
+                    break;
+
+                case 4: // Modify
+                    System.out.print("Enter position to modify (0-based index): ");
+                    int modPos = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                    if (modPos < lines.size() && modPos >= 0) {
+                        System.out.print("Enter new content: ");
+                        lines.set(modPos, sc.nextLine());
+                        System.out.println("Line modified successfully.");
+                    } else {
+                        System.out.println("Invalid line number.");
+                    }
+                    break;
+
+                case 5: // Exit
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+                        for (String str : lines) {
+                            bw.write(str);
+                            bw.newLine();
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Error writing to file: " + e.getMessage());
+                    }
+                    System.out.println("Changes saved. Exiting.");
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
 
 =====================================================================================================================
