@@ -1,26 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="login-container">
-        <h1>Login</h1>
-        <form action="/submit" method="post">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="login-btn">Login</button>
-        </form>
-    </div>
-</body>
-</html>
+SET A 
+1. Accept ‘n’ integers from the user and store them in a collection. Display them in the 
+sorted order. The collection should not accept duplicate elements. (Use a suitable 
+collection). Search for an particular element using predefined search method in the 
+Collection framework. 
+:---------------------
 
+=========================================================================================================================
+2. Construct a linked List containing names of colors: red, blue, yellow and orange. Then 
+extend your program to do the following: 
+i. Display the contents of the List using an Iterator; 
+ii. Display the contents of the List in reverse order using a ListIterator; 
+iii. Create another list containing pink and green. Insert the elements of this list 
+between blue and yellow. 
+:-------------------
+
+============================================================================================================================
+
+3. Create a Hash table containing student name and percentage. Display the details of the 
+hash table. Also search for a specific student and display percentage of that student. 
+:-------------------------------
+
+==================================================================================================================
+SET B 
+1. Create a java application to store city names and their STD codes using an appropriate 
+collection. The GUI ahould allow the following operations: 
+ i. Add a new city and its code (No duplicates) 
+ ii. Remove a city from the collection 
+ iii. Search for a cityname and display the code 
+:------------------------
+
+===================================================================================================================
+SET C 
+1. Read a text file, specified by the first command line argument, into a list. The 
+program should then display a menu which performs the following operations on the list: 
+1. Insert line 2. Delete line 3. Append line 4. Modify line 5. Exit 
+When the user selects Exit, save the contents of the list to the file and end the program.
+:------------------------------
+
+
+=====================================================================================================================
