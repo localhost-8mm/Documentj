@@ -5,6 +5,104 @@ IP address and browser type. The servlet also provides information about the ser
 which the servlet is running, such as the operating system type, and the names of 
 currently loaded servlets.
 :----------------
+index.html
+
+<html>    
+
+<body>        
+
+<form action="lmn" method="get">      
+
+Username:
+
+<input type="text" name="t1">                      
+
+<input type="submit" >        
+
+</form>    </body></html>
+
+
+
+web.xml
+
+<web-app>
+
+<servlet>
+
+<servlet-name>abc</servlet-name>
+
+<servlet-class>serverInfo</servlet-class>
+
+</servlet>
+
+<servlet-mapping>
+
+<servlet-name>abc</servlet-name>
+
+<url-pattern>/lmn</url-pattern>
+
+</servlet-mapping>
+
+</web-app>
+
+
+
+serverInfo.java
+
+serverInfo.java
+
+import java.io.*;
+
+        import javax.servlet.*;
+
+        import javax.servlet.http.*;
+
+public class serverInfo extends HttpServlet implements Servlet
+
+{
+
+    protected void doGet(HttpServletRequest req,HttpServletResponse res)throws 
+
+IOException,ServletException
+
+    {
+
+        res.setContentType("text/html");
+
+        PrintWriter pw=res.getWriter();
+
+        pw.println("<html><body><h2>Information about Http Request</h2>");
+
+        pw.println("<br>Server Name: "+req.getServerName());
+
+
+        pw.println("<br>Server Port: "+req.getServerPort());
+
+        pw.println("<br>Ip Address: "+req.getRemoteAddr());
+
+//pw.println("<br>Server Path: "+req.getServerPath());        pw.println("<br>Client Browser: 
+
+"+req.getHeader("User-Agent"));
+
+        pw.println("</body></html>");
+
+        pw.close();
+
+    }
+
+}
+
+//pw.println("<br>Server Path: "+req.getServerPath());        pw.println("<br>Client Browser: 
+
+"+req.getHeader("User-Agent"));
+
+        pw.println("</body></html>");
+
+        pw.close();
+
+    }
+
+}
 
 ========================================================================================================================
 2. Write a servlet which counts how many times a user has visited a web page. If the user 
