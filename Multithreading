@@ -514,5 +514,104 @@ public class trafficsignal
 pushing elements on the stack, while the third one is popping elements off the 
 stack. 
 :-------------------------
+import java.util.Stack;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+class SharedStack {
+    private Stack<Integer> stack = new Stack<>();
+    private Lock lock = new ReentrantLock();
+
+    public void push(int value, String threadName) {
+        lock.lock();
+        try {
+            stack.push(value);
+            System.out.println(threadName + " pushed " + value + " to stack");
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void pop() {
+        lock.lock();
+        try {
+            if (!stack.isEmpty()) {
+                int value = stack.pop();
+                System.out.println("Popper popped " + value + " from stack");
+            } else {
+                System.out.println("Popper found stack empty");
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+class Pusher implements Runnable {
+    private SharedStack stack;
+    private String threadName;
+
+    public Pusher(SharedStack stack, String threadName) {
+        this.stack = stack;
+        this.threadName = threadName;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            int num = (int) (Math.random() * 100);
+            stack.push(num, threadName);
+            try {
+                Thread.sleep((int) (Math.random() * 500));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+class Popper implements Runnable {
+    private SharedStack stack;
+
+    public Popper(SharedStack stack) {
+        this.stack = stack;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 10; i++) {
+            stack.pop();
+            try {
+                Thread.sleep((int) (Math.random() * 500));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public class ThreadStackDemo {
+    public static void main(String[] args) {
+        SharedStack stack = new SharedStack();
+        
+        Thread pusher1 = new Thread(new Pusher(stack, "Pusher1"));
+        Thread pusher2 = new Thread(new Pusher(stack, "Pusher2"));
+        Thread popper = new Thread(new Popper(stack));
+        
+        pusher1.start();
+        pusher2.start();
+        popper.start();
+        
+        try {
+            pusher1.join();
+            pusher2.join();
+            popper.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("Final stack state: " + stack);
+    }
+}
 
 =====================================================================================================================
