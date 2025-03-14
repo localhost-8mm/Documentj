@@ -4,175 +4,114 @@ SET A
 as a parameter to the constructor). The threads should display the messages continuously 
 till the user presses ctrl-c. Also display the thread information as it is running. 
 :-------------------------
+ 
+class MessageThread extends Thread 
+{
+    private String message; 
+    public MessageThread(String message) 
+     {
+        this.message = message;  
+    }
 
+    @Override   
+    public void run() 
+    {
+        while (true)
+         {
+            System.out.println(Thread.currentThread().getName() + " - " + message);
+            try 
+            {
+                Thread.sleep(2000); // Sleep for 2 second
+            } 
+            catch (InterruptedException e)
+             {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public class message
+{
+public static void main(String[] args) 
+    {
+        
+        new MessageThread("Hello from Thread 1").start();
+        new MessageThread("Hello from Thread 2").start();
+    }
+}
 =====================================================================================================================
 2. Write a java program to calculate the sum and average of an array of 1000 integers 
 (generated randomly) using 10 threads. Each thread calculates the sum of 100 integers. 
 Use these values to calculate average. [Use join method ] 
 :-------------------------
 
-import java.util.*;
-
-
-
-class Sum_Thread implements Runnable {
-
-    Thread t;
-
-    int a[] = new int[1000];
-
-    int no, sum;
-
-
-
-    Sum_Thread(String s, int n) {
-
-        Random r = new Random();
-
-        t = new Thread(this, s);
-
-        int j = 0;
-
-        no = n;
-
-        for (int i = 0; i < 100; i++) {
-
-            a[i] = r.nextInt(100);
-
-            j++;
-
-        }
-
-        t.start();
-
-
-
-    }// Sum_Thread
-
-
-
-    public void run() {
-
-        try {
-
-            for (int i = 0; i < 10; i++) {
-
-                System.out.print(a[no] + " ");
-
-                sum = sum + a[no];
-
-                no++;
-
-
-
-            }
-
-            System.out.println("");
-
-            System.out.println("SUM: " + sum);
-
-            System.out.println("AVG: " + sum / 10);
-
-            System.out.println("");
-
-        } // try
-
-        catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-
-
-
-    }// run
-
-
-
-}
-
-
-
-public class B1 {
-
-
-
-    public static void main(String arg[]) {
-
-        try {
-
-            Sum_Thread t1 = new Sum_Thread("t1", 1);
-
-            t1.t.join();
-
-
-
-            Sum_Thread t2 = new Sum_Thread("t2", 10);
-
-            t2.t.join();
-
-
-
-            Sum_Thread t3 = new Sum_Thread("t3", 20);
-
-            t3.t.join();
-
-
-
-            Sum_Thread t4 = new Sum_Thread("t4", 30);
-
-            t4.t.join();
-
-
-
-            Sum_Thread t5 = new Sum_Thread("t5", 40);
-
-            t5.t.join();
-
-
-
-            Sum_Thread t6 = new Sum_Thread("t6", 50);
-
-            t6.t.join();
-
-
-
-            Sum_Thread t7 = new Sum_Thread("t7", 60);
-
-            t7.t.join();
-
-
-
-            Sum_Thread t8 = new Sum_Thread("t8", 70);
-
-            t8.t.join();
-
-
-
-            Sum_Thread t9 = new Sum_Thread("t9", 80);
-
-            t9.t.join();
-
-
-
-            Sum_Thread t10 = new Sum_Thread("t10", 90);
-
-            t10.t.join();
-
-        } // try
-
-        catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-
-
-
+import java.util.Random;
+
+class SumTask extends Thread
+ {
+    private int[] array;
+    private int start, end;
+    private long partialSum;
+
+    public SumTask(int[] array, int start, int end) 
+    {
+        this.array = array;
+        this.start = start;
+        this.end = end;
     }
 
+    public long getPartialSum() 
+    {
+        return partialSum;
+    }
 
+    //@Override
+    public void run() 
+    {
+        partialSum = 0;
+        for (int i = start; i < end; i++)
+         {
+            partialSum += array[i];
+        }
+    }
+}
 
+public class parrelalsum
+{
+    public static void main(String[] args) throws InterruptedException
+     {
+        int[] array = new int[1000];
+        Random random = new Random();
+
+        // Fill the array with random integers
+        for (int i = 0; i < array.length; i++)
+         {
+            array[i] = random.nextInt(100); // Random numbers between 0 and 99
+        }
+
+        // Create and start 10 threads
+        SumTask[] threads = new SumTask[10];
+        for (int i = 0; i < 10; i++)
+         {
+            int start = i * 100;
+            int end = start + 100;
+            threads[i] = new SumTask(array, start, end);
+            threads[i].start();
+        }
+ 
+        long totalSum = 0;
+        for (SumTask thread : threads)
+         {
+            thread.join();
+            totalSum += thread.getPartialSum();
+        }
+ 
+        double average = (double) totalSum / array.length;
+ 
+        System.out.println("Total Sum: " + totalSum);
+        System.out.println("Average: " + average);
+    }
 }
 
 =====================================================================================================================
@@ -184,135 +123,109 @@ parameters to the thread constructor. Example:
  ii. Second thread prints “I am in SY” 20 times 
  iii. Third thread prints “I am in TY” 30 times 
 :-------------------------
+class PrintText_Thread extends Thread 
+{
+  private String text;
+  private int n;
 
+  public PrintText_Thread(String text, int n) 
+  {
+      this.text = text;
+      this.n = n;
+  }
+
+  //@Override
+  public void run() 
+  {
+      for (int i = 0; i < n; i++)
+       {
+          System.out.println(text);
+      }
+  }
+}
+
+public class textprinter
+ {
+  public static void main(String args[])
+   {
+      // Create and start three threads
+      PrintText_Thread thread1 = new PrintText_Thread("I am in FY", 10); 
+      // arguments like parameterized constructor
+      PrintText_Thread thread2 = new PrintText_Thread("I am in SY", 20);
+      PrintText_Thread thread3 = new PrintText_Thread("I am in TY", 30);
+
+      thread1.start();
+      thread2.start();
+      thread3.start();
+  }
+}
 =====================================================================================================================
 SET B 
 1. Write a program for a simple search engine. Accept a string to be searched. Search for 
 the string in all text files in the current folder. Use a separate thread for each file. The 
 result should display the filename, line number where the string is found. 
 :-------------------------
-import java.io.BufferedReader;
+import java.io.*;
+import java.util.*;
 
-import java.io.File;
+class FileSearchThread extends Thread 
+{
+    private File file;
+    private String searchString;
 
-import java.io.FileReader;
-
-import java.util.Scanner;
-
-
-
-class Mythread extends Thread {
-
-    String str;
-
-    String filename;
-
-
-
-    Mythread(String str, String filename) {
-
-        this.str = str;
-
-        this.filename = filename;
-
+    public FileSearchThread(File file, String searchString) 
+    {
+        this.file = file;
+        this.searchString = searchString;
     }
 
-
-
-    public void run() {
-
-        try {
-
-            int flag = 0;
-
-            File f = new File(filename);
-
-            BufferedReader br = new BufferedReader(new FileReader(f));
-
-            String line = "";
-
-            while ((line = br.readLine()) != null) {
-
-                if (line.contains(str) == true) {
-
-                    flag = 1;
-
-                    break;
-
+    @Override
+    public void run() 
+    {
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
+         {
+            String line;
+            int lineNumber = 1;
+            while ((line = br.readLine()) != null)
+            {
+                if (line.contains(searchString))
+                 {
+                    System.out.println(file.getName() + " - Line " + lineNumber + ": " + line);
                 }
-
+                lineNumber++;
             }
-
-            if (flag == 1) {
-
-                System.out.println("String found in folder/file :" + filename);
-
-            } else {
-
-                System.out.println("String not found in folder/file :" + filename);
-
-
-
-            }
-
-            br.close();
-
-        } catch (Exception e) {
-
+        }
+         catch (IOException e) 
+        {
+            System.err.println("Error reading file: " + file.getName());
             e.printStackTrace();
-
         }
-
     }
-
 }
 
+public class filesearch {
+    public static void main(String[] args) 
+    {
+        // Accept the search string from the user
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the string to search: ");
+        String searchString = scanner.nextLine();
 
+        // Get all .txt files in the current directory
+        File folder = new File(".");
+        File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".txt"));
 
-public class B2 {
-
-    public static void main(String[] args) {
-
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("Enter Search string :");
-
-        String str = sc.nextLine();
-
-
-
-        //Your folder name 
-
-        String dirname = "thread";
-
-        File d = new File(dirname);
-
-        if (d.isDirectory()) {
-
-            String s[] = d.list();
-
-            for (int i = 0; i < s.length; i++) {
-
-                File f = new File(dirname + "/" + s[i]);
-
-                if (f.isFile() && s[i].endsWith(".txt")) {
-
-                    Mythread t = new Mythread(str, dirname + "/" + s[i]);
-
-                    t.start();
-
-                }
-
-            }
-
+        if (files == null || files.length == 0) {
+            System.out.println("No text files found in the current folder.");
+            return;
         }
 
-        sc.close();
-
+        // Create and start a separate thread for each file
+        for (File file : files) {
+            new FileSearchThread(file, searchString).start();
+        }
     }
-
 }
-
 
 =====================================================================================================================
 2. Define a thread to move a ball inside a panel vertically. The Ball should be created 
@@ -321,166 +234,159 @@ position (calculated randomly). Note: Suppose user has clicked buttons 5 times t
 balls should be created and move inside the panel. Ensure that ball is moving within the 
 panel border only. 
 :-------------------------
-import java.awt.*; 
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
+import javax.swing.*;
 
-import java.awt.event.*; 
-
-  
-
-class Bouncing_Balls 
-
-    extends Frame implements MouseListener { 
-
-    // initializing co-ordinates 
-
-    int x = 40, y = 40, t1 = 1, t2 = 1; 
-
-    int x1 = 200, y1 = 40, t12 = 1, t22 = 1; 
-
-    int x2 = 100, y2 = 100, t13 = 1, t23 = 1; 
-
-    Thread th; 
-
-  
-
-    // Making constructor 
-
-    Bouncing_Balls() 
-
-    { 
-
-        setSize(700, 800); 
-
-        setVisible(true); 
-
-  
-
-        // Creating a new Thread 
-
-        th = new Thread(new Thread() { 
-
-            public void run() 
-
-            { 
-
-                while (true) { 
-
-                    x = x + t1; 
-
-                    y = y + t2; 
-
-                    x1 = x1 + t12; 
-
-                    y1 = y1 + t22; 
-
-                    x2 = x2 - t13; 
-
-                    y2 = y2 - t23; 
-
-  
-
-                    // specifying some condition to make 
-
-                    // balls move in a particular path 
-
-                    if (x < 0 || x > 680) 
-
-                        t1 = t1 * (-1); 
-
-                    if (y < 20 || y > 780) 
-
-                        t2 = t2 * (-1); 
-
-                    if (x1 < 0 || x1 > 680) 
-
-                        t12 = t12 * (-1); 
-
-                    if (y1 < 20 || y1 > 780) 
-
-                        t22 = t22 * (-1); 
-
-                    if (x2 < 0 || x2 > 680) 
-
-                        t13 = t13 * (-1); 
-
-                    if (y2 < 20 || y2 > 780) 
-
-                        t23 = t23 * (-1); 
-
-  
-
-                    try { 
-
-                        // Calling sleep method 
-
-                        this.sleep(5); 
-
-                    } 
-
-                    catch (Exception E) { 
-
-                    } 
-
-                    repaint(); 
-
-                } 
-
+// Thread class to move a ball vertically within the panel
+class BallThread extends Thread 
+{
+    private int x;            // Fixed horizontal position (centered)
+    private int y;            // Current vertical position
+    private final int diameter = 20;
+    private int dy = 2;       // Vertical velocity
+    private Color color;
+    private BallPanel panel;
+    
+    public BallThread(BallPanel panel, int x, int y, Color color)
+     {
+        this.panel = panel;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+    
+    @Override
+    public void run()
+     {
+        while (true)
+         {
+            y += dy;
+            if (y < 0)
+             {
+                y = 0;
+                dy = -dy;
+            }
+            // Bounce off the bottom boundary
+            if (y > panel.getHeight() - diameter) 
+            {
+                y = panel.getHeight() - diameter;
+                dy = -dy;
+            }
+            panel.repaint();  // Request the panel to repaint with the new position
+            try 
+            {
+                Thread.sleep(20);
             } 
+            catch (InterruptedException e)
+             {
+                break;
+            }
+        }
+    }
+    
+    // Getters for drawing the ball
+    public int getX()
+          { 
+            return x;
+         }
+    public int getY() 
+         { 
+            return y;
+        }
+    public int getDiameter() 
+    {
+         return diameter; 
+        }
+    public Color getColor()
+     {
+         return color; 
+    }
+}
 
-        }); 
+// Panel that keeps track of all balls and draws them
+class BallPanel extends JPanel
+ {
+    private ArrayList<BallThread> balls = new ArrayList<>();
+    
+    public void addBall(BallThread ball)
+     {
+        balls.add(ball);
+        ball.start();
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g)
+     {
+        super.paintComponent(g);
+        for (BallThread ball : balls)
+         {
+            g.setColor(ball.getColor());
+            g.fillOval(ball.getX(), ball.getY(), ball.getDiameter(), ball.getDiameter());
+        }
+    }
+}
 
-        addMouseListener(this); 
-
-    } 
-
-  
-
-    public void mouseClicked(MouseEvent M) 
-
-    { 
-
-        // Thread will start when mouse is clicked 
-
-        th.start(); 
-
-    } 
-
-    public void mousePressed(MouseEvent M) {} 
-
-    public void mouseReleased(MouseEvent M) {} 
-
-    public void mouseEntered(MouseEvent M) {} 
-
-    public void mouseExited(MouseEvent M) {} 
-
-  
-
-    public void paint(Graphics g) 
-
-    { 
-
-        g.setColor(Color.pink); 
-
-        g.fillOval(x, y, 40, 40); 
-
-        g.setColor(Color.pink); 
-
-        g.fillOval(x1, y1, 40, 40); 
-
-        g.setColor(Color.pink); 
-
-        g.fillOval(x2, y2, 40, 40); 
-
-    } 
-
-    public static void main(String[] args) 
-
-    { 
-
-        Bouncing_Balls B = new Bouncing_Balls(); 
-
-    } 
-
+// Main frame containing the panel and the Start button
+public class bouncingballs extends JFrame
+ {
+    private BallPanel ballPanel;
+    private JButton startButton;
+    
+    public bouncingballs()
+     {
+        setTitle("Vertical Moving Balls");
+        setSize(400, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        
+        ballPanel = new BallPanel();
+        ballPanel.setBackground(Color.WHITE);
+        add(ballPanel, BorderLayout.CENTER);
+        
+        startButton = new JButton("Start");
+        add(startButton, BorderLayout.SOUTH);
+        
+        startButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+             {
+                // Create a new ball with random vertical position and random color
+                Random rand = new Random();
+                int panelHeight = ballPanel.getHeight();
+                int panelWidth = ballPanel.getWidth();
+                // If the panel is not yet visible, use default sizes
+                if (panelHeight <= 0)
+                 { 
+                    panelHeight = 400; 
+                 }
+                if (panelWidth <= 0) 
+                {
+                     panelWidth = 400;
+                 }
+                // For vertical movement, fix the x coordinate to the center
+                int x = panelWidth / 2;
+                // Random initial y position (ensuring the ball is fully within the panel)
+                int y = rand.nextInt(panelHeight - 20);
+                // Generate a random color
+                Color color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+                BallThread ball = new BallThread(ballPanel, x, y, color);
+                ballPanel.addBall(ball);
+            }
+        });
+    }
+    
+    public static void main(String[] args)
+     {
+        SwingUtilities.invokeLater(() ->
+         {
+            bouncingballs frame = new bouncingballs();
+            frame.setVisible(true);
+        });
+    }
 }
 =====================================================================================================================
 SET C 
@@ -489,234 +395,120 @@ filenames. The class should start a thread for each file name. If the file exist
 will write a message to the console and then end. If the filw does not exist, the thread will 
 check for the existence of its file after every 5 seconds till the file gets created. 
 :-------------------------
+import java.io.File;
 
+class FileWatcherThread extends Thread 
+{
+    private String fileName;
+
+    public FileWatcherThread(String fileName) 
+    {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public void run()
+     {
+        File file = new File(fileName);
+        while (true)
+         {
+            if (file.exists()) 
+            {
+                System.out.println("File " + fileName + " exists.");
+                break; // Exit the thread once the file is found
+            }
+             else
+             {
+                System.out.println("File " + fileName + " does not exist. Checking again in 3 seconds...");
+                try 
+                {
+                    Thread.sleep(3000); // Wait for 5 seconds before checking again
+                }
+                 catch (InterruptedException e)
+                 {
+                    System.err.println("Thread interrupted: " + e.getMessage());
+                    break;
+                }
+            }
+        }
+    }
+}
+
+public class filewatcher
+{
+    public static void main(String[] args)
+     {
+        if (args.length == 0)
+         {
+            System.out.println("Usage: java FileWatcher <file1> <file2> ...");
+            return;
+        }
+
+        for (String fileName : args) 
+        {
+            new FileWatcherThread(fileName).start();
+        }
+    }
+}
 =====================================================================================================================
 2.Write a program to simulate traffic signal using threads.
 :-------------------------
-import javax.swing.*;
-
-import java.awt.event.*;
-
-import java.awt.*;
-
-
-
-public class C1 extends JFrame implements ActionListener {
-
-    JPanel panel = new JPanel();
-
-
-
-    JLabel title_lbl = new JLabel("Traffic Light");
-
-
-
-    JRadioButton rb1 = new JRadioButton("Red");
-
-    JRadioButton rb2 = new JRadioButton("Yellow");
-
-    JRadioButton rb3 = new JRadioButton("Green");
-
-
-
-    JButton ok_btn = new JButton("OK");
-
-
-
-    ButtonGroup g1 = new ButtonGroup();
-
-
-
-    JLabel red;
-
-    JLabel yellow;
-
-    JLabel green;
-
-
-
-    C1() {
-
-        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        setSize(800, 700);
-
-        setTitle("Java Project Program");
-
-
-
-        setLocation(400, 150);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-
-        red = new JLabel("STOP");
-
-        red.setForeground(Color.red);
-
-        yellow = new JLabel("READY");
-
-        yellow.setForeground(Color.yellow);
-
-        green = new JLabel("GO");
-
-        green.setForeground(Color.green);
-
-
-
-        panel.setPreferredSize(new Dimension(500, 400));
-
-        panel.setLayout(null);
-
-        panel.setBackground(Color.lightGray);
-
-
-
-        title_lbl.setBounds(200, 0, 200, 100);
-
-        panel.add(title_lbl);
-
-
-
-        rb1.setBounds(100, 210, 100, 20);
-
-        panel.add(rb1);
-
-        rb2.setBounds(200, 210, 100, 20);
-
-        panel.add(rb2);
-
-        rb3.setBounds(300, 210, 100, 20);
-
-        panel.add(rb3);
-
-
-
-        ok_btn.setBounds(200, 310, 100, 50);
-
-        panel.add(ok_btn);
-
-        ok_btn.addActionListener(this);
-
-
-
-        red.setBounds(220, 110, 100, 50);
-
-        yellow.setBounds(220, 110, 100, 50);
-
-        green.setBounds(220, 110, 100, 50);
-
-
-
-        rb1.setForeground(Color.red);
-
-        rb2.setForeground(Color.yellow);
-
-        rb3.setForeground(Color.green);
-
-
-
-        rb1.setBackground(Color.lightGray);
-
-        rb2.setBackground(Color.lightGray);
-
-        rb3.setBackground(Color.lightGray);
-
-
-
-        red.setFont(new Font("Arial", Font.BOLD, 20));
-
-        yellow.setFont(new Font("Arial", Font.BOLD, 20));
-
-        green.setFont(new Font("Arial", Font.BOLD, 20));
-
-        title_lbl.setFont(new Font("Arial", Font.BOLD, 20));
-
-
-
-        panel.add(red);
-
-        panel.add(yellow);
-
-        panel.add(green);
-
-
-
-        red.setVisible(false);
-
-        yellow.setVisible(false);
-
-        green.setVisible(false);
-
-
-
-        g1.add(rb1);
-
-        g1.add(rb2);
-
-        g1.add(rb3);
-
-
-
-        this.add(panel);
-
-        this.pack();
-
-        setVisible(true);
-
-    }
-
-
-
-    public void actionPerformed(ActionEvent ae) {
-
-        if (ae.getSource() == ok_btn) {
-
-            if (rb1.isSelected()) {
-
-                yellow.setVisible(false);
-
-                green.setVisible(false);
-
-                red.setVisible(true);
-
-            } else if (rb2.isSelected()) {
-
-                red.setVisible(false);
-
-                green.setVisible(false);
-
-                yellow.setVisible(true);
-
-            }
-
-            if (rb3.isSelected()) {
-
-                red.setVisible(false);
-
-                yellow.setVisible(false);
-
-                green.setVisible(true);
-
-            }
-
-        }
-
-    }
-
-
-
-    public static void main(String args[]) {
-
-        new C1();
-
-
-
-    }
-
+class TrafficSignal extends Thread
+ {
+  private String signalColor;
+
+  public TrafficSignal(String initialColor) 
+  {
+      this.signalColor = initialColor;
+  }
+
+  @Override
+  public void run()
+   {
+      while (true) 
+      {
+          switch (signalColor)
+           {
+              case "RED":
+                  System.out.println("Signal is RED. Stop!");
+                  sleepFor(5000); // Red for 5 seconds
+                  signalColor = "GREEN";
+                  break;
+              case "GREEN":
+                  System.out.println("Signal is GREEN. Go!");
+                  sleepFor(5000); // Green for 5 seconds
+                  signalColor = "YELLOW";
+                  break;
+              case "YELLOW":
+                  System.out.println("Signal is YELLOW. Get Ready!");
+                  sleepFor(2000); // Yellow for 2 seconds
+                  signalColor = "RED";
+                  break;
+          }
+      }
+  }
+
+  private void sleepFor(int milliseconds)
+   {
+      try 
+      {
+          Thread.sleep(milliseconds);
+      } 
+      catch (InterruptedException e)
+       {
+          System.err.println("Signal interrupted: " + e.getMessage());
+      }
+  }
 }
 
+public class trafficsignal
+ {
+  public static void main(String[] args) 
+  {
+      TrafficSignal signal = new TrafficSignal("RED");
+      signal.start();
+  }
+} 
 =====================================================================================================================
 3. Write a program to show how three thread manipulate same stack , two of them are 
 pushing elements on the stack, while the third one is popping elements off the 
