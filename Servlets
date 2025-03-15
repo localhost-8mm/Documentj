@@ -104,17 +104,22 @@ IOException,ServletException
 
 }
 
+
+
+
 ========================================================================================================================
 2. Write a servlet which counts how many times a user has visited a web page. If the user 
 is visiting the page for the first time, display a welcome message. If the user is re-visiting 
 the page, display the number of times visited. (Use cookies) 
 :----------------
 
+
 ========================================================================================================================
 3. Design an HTML page which passes student roll number to a search servlet. The 
 servlet searches for the roll number in a database (student table) and returns student 
 details if found or error message otherwise. 
 :----------------
+
 
 ========================================================================================================================
 SET B 
@@ -124,12 +129,14 @@ which consists of a page total of what ever the purchase has been done and print
 total. (Use HttpSession) 
 :----------------
 
+
 ========================================================================================================================
 2. Design an HTML page containing 4 option buttons (Painting, Drawing, Singing 
 and swimming) and 2 buttons reset and submit. When the user clicks submit, the server 
 responds by adding a cookie containing the selected hobby and sends a message back to 
 the client. Program should not allow duplicate cookies to be written. 
 :----------------
+
 
 ========================================================================================================================
 Set B: Additional Programs For Practice 
@@ -140,6 +147,7 @@ you have created. The servlet sends back an appropriate response. Also calculate
 the number of time that user has successfully performed the login activity. Use 
 cookies. 
 :----------------
+
 
 ========================================================================================================================
 SET C 
@@ -153,5 +161,7 @@ with his name on top.
 b) Accept a movie name and list all actors in that movie along with the movie name 
 on top. 
 :----------------
+
+
 
 ========================================================================================================================
