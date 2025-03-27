@@ -1,0 +1,149 @@
+Collection ++++
+
+SET A 
+1. Accept ‘n’ integers from the user and store them in a collection. Display them in the sorted order. The collection should not accept duplicate elements. (Use a suitable  collection). Search for an particular element using predefined search method in the  Collection framework.  
+
+2.  Construct a linked List containing names of colors: red, blue, yellow and orange. Then extend your program to do the following:  
+i. Display the contents of the List using an Iterator;  
+ii. Display the contents of the List in reverse order using a ListIterator;  
+iiiCreate another list containing  pink and  green. Insert the elements of this list between blue and yellow.  
+
+3. Create a Hash table containing student name and percentage. Display the details of thehash table. Also search for a specific student and display percentage of that student. 
+
+SET B 
+1. Create a java application to store city names and their STD codes using an appropriate collection. The GUI ahould allow the following operations: 
+i. Add a new city and its code (No duplicates) 
+ii. Remove a city from the collection 
+iii. Search for a cityname and display the code 
+
+SET C 
+
+1.  Read a text file, specified by the first command line argument, into a list. The program should then display a menu which performs the following operations on the list: 
+1. Insert line  2. Delete line  3. Append line 4. Modify line 5. Exit 
+
+---------------------------------------------------------------------------------------------------------------
+Database programming +++
+
+SET A 
+1.  Create a student table with fields roll number, name, percentage. Insert values in the   table. Display all the details of the student table in a tabular format on the screen (using  swing).  
+2.  Write a program to display information about the database and list all the tables in the database. (Use DatabaseMetaData). 
+3. Write a program to display information about all columns in the student table. (Use ResultSetMetaData). 
+SET B 
+1.  Write a menu driven program (Command line interface) to perform the following 
+operations on student table.  
+1. Insert 
+2. Modify 
+3. Delete 
+4. Search 
+5. View All   
+6. Exit 
+
+2. Design a following Phone Book Application Screen using swing & write a code for various operations like Delete, Update, Next, Previous. Raise an appropriate   exception if invalid data is entered like name left blank and negative phone Number. 
+
+NAME 
+ADDRESS 
+PHONE 
+EMAIL 
+<< 
+DELETE 
+UPDATE
+ >>
+ EXIT
+
+SET C 
+
+1.  Create tables : Course (id, name, instructor) and Student (id, name). Course and Student have a many to many relationship. Create a GUI based system for performing the    following operations on the tables: 
+   ---Course: Add Course, View All students of a specific course 
+--Student: Add Student, Delete Student, View All students, Search student 
+
+2. Design a GUI to perform the following operations on Telephone user data. 
+i. Add record   ii. Display current bill  
+Add record stores the details of a telephone user in a database. User has the following   attributes: User (id, name, telephone number, number of calls, month, year).  
+Display current bill should Calculate and display the bill for a specific user (search by   name or phone number) using the following rules. Provide button to Search user on basis  of telephone number or name.  
+Rules: The first 100 calls are free and rent is Rs. 300) 
+ 
+No. Of Calls   
+> 100 and <=500   
+> 500   
+------------
+Charge (per call) 
+Rs. 1.00 
+ Rs. 1.30
+
+-------------------------------------------------------------------------------------------------------
+Sevalets+++++
+
+ 
+SET A 
+ 
+1.  Design a servlet that provides information about a HTTP request from a client, such as  IP address and browser type. The servlet also provides information about the server on which the servlet is running, such as the operating system type, and the names of  currently loaded servlets. 
+ 
+2. Write a servlet which counts how many times a user has visited a web page. If the user is visiting the page for the first time, display a welcome message. If the user is re-visiting the page, display the number of times visited. (Use cookies) 
+
+3. Design an HTML page which passes student roll number to a search servlet. The servlet searches for the roll number in a database (student tble) and returns student  details if found or error message otherwise.  
+
+SET B 
+1.	Write a program to create a shopping mall. User must be allowed to do purchase from two pages. Each page should have a page total. The third page should display a bill,  which consists of a page total of what ever the purchase has been done and print the  total. (Use HttpSession) 
+
+2.  Design an HTML page containing 4 option buttons (Painting, Drawing, Singing and swimming) and 2 buttons reset and submit. When the user clicks submit, the server responds by adding a cookie containing the selected hobby and sends a message back to  the client. Program should not allow duplicate cookies to be written. 
+
+Set B:  Additional Programs For Practice 
+1. Design the table Login(login_name, password) using MySQL. Also design an HTML login screen. Accept the login name and password from the user. The servlet accepts the login name and password and validates it from the database you have created. The servlet sends back an appropriate response. Also calculate the number of time that user has successfully performed the login activity. Use 
+cookies. 
+
+SET C 
+1.  Consider the following entities and their relationships 
+Movie  (movie_no, movie_name, release_year) 
+Actor(actor_no, name) 
+Relationship between movie and actor is many – many with attribute rate in Rs. 
+Create a RDB in 3 NF answer the following: 
+a) Accept an actor name and display all movie names in which he has acted along 
+with his name on top. 
+b) Accept a movie name and list all actors in that movie along with the movie name on top.
+
+-----------------------------------------------------------------------------------------------------------------------
+JSP ++++++
+
+SET A 
+ 1.  Write a Program to make use of following JSP implicit objects:  
+ i)out: To display current Date and Time. 
+ii)request: To get header information. 
+iii)response: To Add Cookie 
+iv)config: get the parameters value defined in  <init-param> 
+v)application: get the parameter value defined in <context-param> 
+vi)session: Display Current Session ID 
+vii)pageContext: To set and get the attributes. 
+viii)page: get the name of Generated Servlet
+
+
+2.	Create a JSP page which will accept the file extension and display all files in the current directory having that extension. Each filename should appear as a hyperlink on screen. 
+
+SET B 
+1.  Create a JSP page, which accepts user name in a text box and greets the user according to the time on server side. Example: User name : ABC      
+Output : Good morning ABC /  Good Afternoon ABC/ Good Evening ABC  
+
+2. Create a JSP page for an online multiple choice test. The questions are randomly selected from a database and displayed on the screen.  The choices are displayed using adio buttons. When the user clicks on next, the next question is displayed. When the user clicks on submit, display the total score on the screen.  
+
+-------------------------------------------------------------------------------------------------------------------------
+Multithreading ++++
+
+SET A 
+1.	Write  a  program that create 2 threads – each displaying a message (Pass the message as a parameter to the constructor). The threads should display the messages continuously till the user presses ctrl-c. Also display the thread information as it is running.
+  
+2.  Write a java program to calculate the sum and average of an array of 1000 integers (generated randomly) using 10 threads. Each thread calculates the sum of 100 integers. Use these values to calculate average
+1. Define a thread called “PrintText_Thread” for printing text on command prompt for   n number of times. Create three threads and run them. Pass the text and n as parameters to the thread constructor. Example: 
+i. First thread prints “I am in FY” 10 times 
+ii. Second thread prints “I am in SY” 20 times 
+iii. Third thread prints “I am in TY” 30 times 
+
+SET B 
+1. Write a program for a simple search engine. Accept a string to be searched. Search for the string in all text files in the current folder. Use a separate thread for each file. The result should display the filename, line number where the string is found. 
+
+2. Define a thread to move a ball inside a panel vertically. The Ball should be created when user clicks on the Start Button. Each ball should have a different color and vertical  position (calculated randomly). Note: Suppose user has clicked buttons 5 times then five   balls should be created and move inside the panel. Ensure that ball is moving within the   panel border only. 
+
+SET C 
+1.	Write a java program to create a class called FileWatcher that can be given several filenames. The class should start a thread for each file name. If the file exists, the thread  will write a message to the console and then end. If the filw does not exist, the thread will  check for the existence of its file after every 5 seconds till the file gets created. 
+
+2.Write a program to simulate traffic signal using threads. 
+
+3. Write a program to show how three thread manipulate same stack , two of them are pushing  elements on the stack, while the third one is popping elements off the  stack. 
