@@ -5,106 +5,41 @@ IP address and browser type. The servlet also provides information about the ser
 which the servlet is running, such as the operating system type, and the names of 
 currently loaded servlets.
 :----------------
-index.html
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-<html>    
-
-<body>        
-
-<form action="lmn" method="get">      
-
-Username:
-
-<input type="text" name="t1">                      
-
-<input type="submit" >        
-
-</form>    </body></html>
-
-
+public class ServerInfo extends HttpServlet
+ {
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException 
+    {
+        res.setContentType("text/html");
+        PrintWriter pw = res.getWriter();
+        pw.println("<html><body><h2>Information about HTTP Request</h2>");
+        pw.println("<br>Server Name: " + req.getServerName());
+        pw.println("<br>Server Port: " + req.getServerPort());
+        pw.println("<br>IP Address: " + req.getRemoteAddr());
+        pw.println("<br>Client Browser: " + req.getHeader("User-Agent"));
+        pw.println("</body></html>");
+        pw.close();
+    }
+}
 
 web.xml
-
-<web-app>
-
-<servlet>
-
-<servlet-name>abc</servlet-name>
-
-<servlet-class>serverInfo</servlet-class>
-
-</servlet>
-
-<servlet-mapping>
-
-<servlet-name>abc</servlet-name>
-
-<url-pattern>/lmn</url-pattern>
-
-</servlet-mapping>
-
+xml
+Copy
+Edit
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+        <servlet-name>serverInfo</servlet-name>
+        <servlet-class>ServerInfo</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>serverInfo</servlet-name>
+        <url-pattern>/server</url-pattern>
+    </servlet-mapping>
 </web-app>
-
-
-
-serverInfo.java
-
-serverInfo.java
-
-import java.io.*;
-
-        import javax.servlet.*;
-
-        import javax.servlet.http.*;
-
-public class serverInfo extends HttpServlet implements Servlet
-
-{
-
-    protected void doGet(HttpServletRequest req,HttpServletResponse res)throws 
-
-IOException,ServletException
-
-    {
-
-        res.setContentType("text/html");
-
-        PrintWriter pw=res.getWriter();
-
-        pw.println("<html><body><h2>Information about Http Request</h2>");
-
-        pw.println("<br>Server Name: "+req.getServerName());
-
-
-        pw.println("<br>Server Port: "+req.getServerPort());
-
-        pw.println("<br>Ip Address: "+req.getRemoteAddr());
-
-//pw.println("<br>Server Path: "+req.getServerPath());        pw.println("<br>Client Browser: 
-
-"+req.getHeader("User-Agent"));
-
-        pw.println("</body></html>");
-
-        pw.close();
-
-    }
-
-}
-
-//pw.println("<br>Server Path: "+req.getServerPath());        pw.println("<br>Client Browser: 
-
-"+req.getHeader("User-Agent"));
-
-        pw.println("</body></html>");
-
-        pw.close();
-
-    }
-
-}
-
-
 
 
 ========================================================================================================================
@@ -112,6 +47,65 @@ IOException,ServletException
 is visiting the page for the first time, display a welcome message. If the user is re-visiting 
 the page, display the number of times visited. (Use cookies) 
 :----------------
+  VisitServlet.java 
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class VisitServlet extends HttpServlet
+ {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
+    {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        // Retrieve existing cookies
+        Cookie[] cookies = request.getCookies();
+        int visitCount = 1;
+
+        if (cookies != null)
+         {
+            for (Cookie cookie : cookies) 
+            {
+                if (cookie.getName().equals("visit"))
+                 {
+                    visitCount = Integer.parseInt(cookie.getValue()) + 1;
+                }
+            }
+        }
+
+        // Update visit count in cookie
+        Cookie newCookie = new Cookie("visit", String.valueOf(visitCount));
+        newCookie.setMaxAge(24 * 60 * 60); // 1 day expiration
+        response.addCookie(newCookie);
+
+        // Display message
+        if (visitCount == 1) 
+        {
+            out.println("Welcome to the web page for the first time!");
+        } 
+        else
+        {
+            out.println("You have visited this page " + visitCount + " times.");
+        }
+    }
+}
+
+Web.xml
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+        <servlet-name>VisitServlet</servlet-name>
+        <servlet-class>VisitServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>VisitServlet</servlet-name>
+        <url-pattern>/VS</url-pattern>
+    </servlet-mapping>
+</web-app>
 
 
 ========================================================================================================================
@@ -119,7 +113,105 @@ the page, display the number of times visited. (Use cookies)
 servlet searches for the roll number in a database (student table) and returns student 
 details if found or error message otherwise. 
 :----------------
+//searchstudentservlet.java
 
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/SearchStudentServlet")  
+public class SearchStudentServlet extends HttpServlet 
+{
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String rollno = request.getParameter("rollno");  // Get roll number from HTML form
+
+        
+        String url = "jdbc:postgresql://192.168.0.12:5432/examx";  // PostgreSQL port is 5432
+        String user = "examx";
+        String password = "examxpass";
+
+        try
+         {
+       
+            Class.forName("org.postgresql.Driver");
+ 
+            Connection conn = DriverManager.getConnection(url, user, password);
+ 
+            String query = "SELECT * FROM student WHERE rollno = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, rollno);
+            ResultSet rs = ps.executeQuery();
+
+            out.println("<html><body>");
+            if (rs.next())
+             {
+                
+                String name = rs.getString("name");
+                double percentage = rs.getDouble("percentage");
+
+               
+                out.println("<h2>Student Details</h2>");
+                out.println("<p><b>Roll Number:</b> " + rollno + "</p>");
+                out.println("<p><b>Name:</b> " + name + "</p>");
+                out.println("<p><b>Percentage:</b> " + percentage + "%</p>");
+            }
+             else 
+             {
+                out.println("<h2 style='color:red;'>Student Not Found!</h2>");
+            }
+            out.println("</body></html>");
+
+             
+            rs.close();
+            ps.close();
+            conn.close();
+        } 
+        catch (Exception e)
+         {
+            out.println("<h3>Error: " + e.getMessage() + "</h3>");
+        }
+    }
+}
+
+
+
+
+//index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Student</title>
+</head>
+<body>
+    <h2>Search Student Details</h2>
+    <form action="SearchStudentServlet" method="GET">
+        <label for="rollno">Enter Roll Number:</label>
+        <input type="text" id="rollno" name="rollno" required>
+        <input type="submit" value="Search">
+    </form>
+</body>
+</html>
+
+
+
+//database
+CREATE TABLE student 
+(
+    rollno VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(100),
+    percentage DOUBLE PRECISION
+);
+
+INSERT INTO student VALUES 
+('101', 'Alice Brown', 85.5),
+('102', 'Bob Smith', 78.2);
 
 ========================================================================================================================
 SET B 
@@ -129,13 +221,192 @@ which consists of a page total of what ever the purchase has been done and print
 total. (Use HttpSession) 
 :----------------
 
+public import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
+@WebServlet("/AddToCartServlet")
+public class AddToCartServlet extends HttpServlet 
+{
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException
+             {
+        HttpSession session = request.getSession();
+
+        
+        
+        Integer page1Total = (Integer) session.getAttribute("page1Total");
+        Integer page2Total = (Integer) session.getAttribute("page2Total");
+
+        if (page1Total == null) page1Total = 0;
+        if (page2Total == null) page2Total = 0;
+
+       
+        
+        String page = request.getParameter("page");
+        int total = 0;
+        String[] selectedItems = request.getParameterValues("items");
+
+        if (selectedItems != null)
+         {
+            for (String price : selectedItems) 
+            {
+                total += Integer.parseInt(price);
+            }
+        }
+
+        
+        
+        if ("1".equals(page))
+        {
+            session.setAttribute("page1Total", page1Total + total);
+            response.sendRedirect("page2.jsp");
+        } 
+        else if ("2".equals(page)) 
+        {
+            session.setAttribute("page2Total", page2Total + total);
+            response.sendRedirect("bill.jsp");
+        }
+    }
+}
+  
+
+page2.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html>
+<head><title>Shopping Mall - Page 2</title></head>
+<body>
+    <h2>Shopping Page 2</h2>
+    <form action="AddToCartServlet" method="post">
+        <input type="checkbox" name="items" value="250"> Item D - $250 <br>
+        <input type="checkbox" name="items" value="300"> Item E - $300 <br>
+        <input type="checkbox" name="items" value="180"> Item F - $180 <br>
+        <input type="hidden" name="page" value="2">
+        <input type="submit" value="View Bill">
+    </form>
+</body>
+</html>
+
+---------
+
+bill.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html>
+<head><title>Shopping Bill</title></head>
+<body>
+    <h2>Final Bill</h2>
+    <%
+        Integer page1Total = (Integer) session.getAttribute("page1Total");
+        Integer page2Total = (Integer) session.getAttribute("page2Total");
+        if (page1Total == null) page1Total = 0;
+        if (page2Total == null) page2Total = 0;
+        int grandTotal = page1Total + page2Total;
+    %>
+    <p>Page 1 Total: $<%= page1Total %></p>
+    <p>Page 2 Total: $<%= page2Total %></p>
+    <h3>Grand Total: $<%= grandTotal %></h3>
+</body>
+</html>
 ========================================================================================================================
 2. Design an HTML page containing 4 option buttons (Painting, Drawing, Singing 
 and swimming) and 2 buttons reset and submit. When the user clicks submit, the server 
 responds by adding a cookie containing the selected hobby and sends a message back to 
 the client. Program should not allow duplicate cookies to be written. 
 :----------------
+
+//Hobbyservlet.java
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet("/HobbyServlet")
+public class HobbyServlet extends HttpServlet 
+{
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String[] hobbies = request.getParameterValues("hobby");
+
+        if (hobbies != null) 
+        {
+            Cookie[] cookies = request.getCookies();
+            
+            for (String hobby : hobbies) 
+            {
+                boolean exists = false;
+
+                // Check if the cookie already exists
+                if (cookies != null) 
+                {
+                    for (Cookie c : cookies)
+                     {
+                        if (c.getName().equals(hobby))
+                         {
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+
+                // If cookie does not exist, create a new one
+                if (!exists) 
+                {
+                    Cookie newCookie = new Cookie(hobby, "selected");
+                    newCookie.setMaxAge(60 * 60 * 24);
+                    response.addCookie(newCookie);
+                }
+            }
+
+            out.println("<html><body>");
+            out.println("<h2>Hobbies Saved:</h2>");
+            for (String hobby : hobbies) 
+            {
+                out.println("<p>" + hobby + " has been saved as your hobby.</p>");
+            }
+            out.println("<a href='hobby.html'>Go Back</a>");
+            out.println("</body></html>");
+        }
+         else
+          {
+            out.println("<h2>No hobbies selected!</h2>");
+            out.println("<a href='hobby.html'>Go Back</a>");
+        }
+    }
+}
+
+
+--------------
+hobby.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hobby Selection</title>
+</head>
+<body>
+    <h2>Select Your Hobby</h2>
+    <form action="HobbyServlet" method="POST">
+        <input type="checkbox" name="hobby" value="Painting"> Painting<br>
+        <input type="checkbox" name="hobby" value="Drawing"> Drawing<br>
+        <input type="checkbox" name="hobby" value="Singing"> Singing<br>
+        <input type="checkbox" name="hobby" value="Swimming"> Swimming<br>
+        
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+    </form>
+</body>
+</html>
+
 
 
 ========================================================================================================================
@@ -147,6 +418,100 @@ you have created. The servlet sends back an appropriate response. Also calculate
 the number of time that user has successfully performed the login activity. Use 
 cookies. 
 :----------------
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form action="LoginServlet" method="post">
+        <label for="login_name">Login Name:</label>
+        <input type="text" id="login_name" name="login_name" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+
+
+----
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String loginName = request.getParameter("login_name");
+        String password = request.getParameter("password");
+
+        try {
+            // Database connection
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/UserAuth", "root", "yourpassword");
+
+            // Validate user
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM Login WHERE login_name=? AND password=?");
+            ps.setString(1, loginName);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Fetch existing cookie
+                Cookie[] cookies = request.getCookies();
+                int loginCount = 0;
+                
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equals("loginCount")) {
+                            loginCount = Integer.parseInt(cookie.getValue());
+                        }
+                    }
+                }
+
+                loginCount++; // Increment login count
+                
+                // Set new cookie with updated login count
+                Cookie loginCookie = new Cookie("loginCount", String.valueOf(loginCount));
+                loginCookie.setMaxAge(60 * 60 * 24 * 30); // 30 days
+                response.addCookie(loginCookie);
+
+                out.println("<h3>Login Successful!</h3>");
+                out.println("<p>Welcome, " + loginName + ".</p>");
+                out.println("<p>You have logged in " + loginCount + " times.</p>");
+            } else {
+                out.println("<h3>Invalid Login</h3>");
+                out.println("<p>Try again.</p>");
+            }
+            con.close();
+        } catch (Exception e) {
+            out.println("<h3>Error: " + e.getMessage() + "</h3>");
+        }
+        out.close();
+    }
+}
 
 
 ========================================================================================================================
@@ -163,5 +528,30 @@ on top.
 :----------------
 
 
+CREATE DATABASE MovieDB;
+USE MovieDB;
+
+CREATE TABLE Movie (
+    movie_no INT PRIMARY KEY AUTO_INCREMENT,
+    movie_name VARCHAR(255) NOT NULL,
+    release_year INT NOT NULL
+);
+
+CREATE TABLE Actor (
+    actor_no INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Movie_Actor (
+    movie_no INT,
+    actor_no INT,
+    rate DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (movie_no, actor_no),
+    FOREIGN KEY (movie_no) REFERENCES Movie(movie_no) ON DELETE CASCADE,
+    FOREIGN KEY (actor_no) REFERENCES Actor(actor_no) ON DELETE CASCADE
+);
+
+
+---
 
 ========================================================================================================================
