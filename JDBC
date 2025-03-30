@@ -22,11 +22,11 @@ public class JDBC1
 
         Class.forName("org.postgresql.Driver");
 
-        conn = DriverManager.getConnection("jdbc:postgresql://192.168.0.12/tya13", "tya13", "Nilesh@3304");
+        conn = DriverManager.getConnection("jdbc:postgresql://192.168.0.12/examx", "examx", "exampasss");
         psInsert = conn.prepareStatement("INSERT INTO student(rollno, name, percentage) VALUES (?, ?, ?)");
 
         if (conn != null)
-				 {
+ {
             System.out.println("Connection successful...");
 
             System.out.print("Enter roll number: ");
@@ -88,7 +88,6 @@ public class JDBC1
 
 
 
-
 ======================================================================================================================
 2. Write a program to display information about the database and list all the tables in the 
 database. (Use DatabaseMetaData). 
@@ -101,7 +100,7 @@ public class JDBC2
  {
 		Connection conn=null;
 		Class.forName("org.postgresql.Driver");
-		conn=DriverManager.getConnection("jdbc:postgresql://192.168.0.12/tya13","tya13","Nilesh@3304");
+		conn=DriverManager.getConnection("jdbc:postgresql://192.168.0.12/examx","examx","exampasss");
 
 		if(conn!=null)
 		{
@@ -128,8 +127,8 @@ public class JDBC2
 	}
 }
 
-// CREATE DATABASE tya13;
-// \c tya13
+// CREATE DATABASE examx;
+// \c examx
 //  CREATE TABLE users 
 // (
 //     id SERIAL PRIMARY KEY,
@@ -138,8 +137,6 @@ public class JDBC2
 //     password TEXT NOT NULL,
 //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 //  );
-
-
 
 ========================================================================================================================
 3. Write a program to display information about all columns in the student table. (Use 
@@ -156,7 +153,7 @@ public class JDBC3
 		ResultSet rs=null;
 
 		Class.forName("org.postgresql.Driver");
-		conn=DriverManager.getConnection("jdbc:postgresql://192.168.0.12/tya13","tya13","Nilesh@3304");
+		conn=DriverManager.getConnection("jdbc:postgresql://192.168.0.12/examx","examx","examxpass");
 
 		if(conn!=null)
 		{
@@ -185,10 +182,16 @@ public class JDBC3
 	}
 }
 
-// CREATE DATABASE tya13;
-// \c tya13
-
-
+CREATE DATABASE examx;
+\c examx
+ CREATE TABLE users 
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ );
 
 
 ========================================================================================================================
@@ -729,7 +732,7 @@ public class JDBC6 extends JFrame implements ActionListener
     private void connectDatabase() {
         try {
             Class.forName("org.postgresql.Driver");
-            conn=DriverManager.getConnection("jdbc:postgresql://192.168.0.12/tya13","tya13","Nilesh@3304");
+            conn=DriverManager.getConnection("jdbc:postgresql://192.168.0.12/examx","examx","examxpass");
             createTables();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Database Connection Failed!");
@@ -938,8 +941,6 @@ public class JDBC6 extends JFrame implements ActionListener
 //     course_id INT REFERENCES Course(id) ON DELETE CASCADE,
 //     PRIMARY KEY (student_id, course_id)
 // );
-
-
 
 
 ======================================================================================================================
