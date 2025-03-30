@@ -515,78 +515,114 @@ pushing elements on the stack, while the third one is popping elements off the
 stack. 
 :-------------------------
 import java.util.Stack;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-class SharedStack {
+class SharedStack 
+{
     private Stack<Integer> stack = new Stack<>();
-    private Lock lock = new ReentrantLock();
+    private final int CAPACITY = 5;
 
-    public void push(int value, String threadName) {
-        lock.lock();
-        try {
-            stack.push(value);
-            System.out.println(threadName + " pushed " + value + " to stack");
-        } finally {
-            lock.unlock();
+    public synchronized void push(int value, String threadName) 
+    {
+        while (stack.size() >= CAPACITY)
+         {
+            try 
+            {
+                wait(); // Wait if stack is full
+            } 
+            catch (InterruptedException e)
+             {
+                e.printStackTrace();
+            }
         }
+        stack.push(value);
+        System.out.println(threadName + " pushed: " + value);
+        notifyAll(); // Notify other threads
     }
 
-    public void pop() {
-        lock.lock();
-        try {
-            if (!stack.isEmpty()) {
-                int value = stack.pop();
-                System.out.println("Popper popped " + value + " from stack");
-            } else {
-                System.out.println("Popper found stack empty");
+    public synchronized int pop() 
+    {
+        while (stack.isEmpty())
+         {
+            try {
+                wait(); // Wait if stack is empty
+            } catch (InterruptedException e)
+             {
+                e.printStackTrace();
             }
-        } finally {
-            lock.unlock();
         }
+        int value = stack.pop();
+        System.out.println("Popper popped: " + value);
+        notifyAll(); // Notify other threads
+        return value;
     }
 }
 
-class Pusher implements Runnable {
+class Pusher extends Thread 
+{
     private SharedStack stack;
     private String threadName;
 
-    public Pusher(SharedStack stack, String threadName) {
+    public Pusher(SharedStack stack, String name) 
+    {
         this.stack = stack;
-        this.threadName = threadName;
+        this.threadName = name;
     }
 
-    @Override
-    public void run() {
-        for (int i = 0; i < 5; i++) {
-            int num = (int) (Math.random() * 100);
-            stack.push(num, threadName);
-            try {
-                Thread.sleep((int) (Math.random() * 500));
-            } catch (InterruptedException e) {
+    public void run()
+     {
+        for (int i = 1; i <= 5; i++)
+         {
+            stack.push(i, threadName);
+            try 
+            {
+                Thread.sleep(500); // Simulating delay
+            } 
+            catch (InterruptedException e)
+             {
                 e.printStackTrace();
             }
         }
     }
 }
 
-class Popper implements Runnable {
+
+class Popper extends Thread
+ {
     private SharedStack stack;
 
-    public Popper(SharedStack stack) {
+    public Popper(SharedStack stack)
+     {
         this.stack = stack;
     }
 
-    @Override
-    public void run() {
-        for (int i = 0; i < 10; i++) {
+    public void run() 
+    {
+        for (int i = 1; i <= 10; i++)
+         { // More pops than pushes
             stack.pop();
-            try {
-                Thread.sleep((int) (Math.random() * 500));
-            } catch (InterruptedException e) {
+            try
+             {
+                Thread.sleep(700); // Simulating delay
+            } catch (InterruptedException e) 
+            {
                 e.printStackTrace();
             }
         }
+    }
+}
+
+public class stack
+ {
+    public static void main(String[] args) {
+        SharedStack stack = new SharedStack();
+        
+        Pusher pusher1 = new Pusher(stack, "Pusher1");
+        Pusher pusher2 = new Pusher(stack, "Pusher2");
+        Popper popper = new Popper(stack);
+
+        pusher1.start();
+        pusher2.start();
+        popper.start();
     }
 }
 
