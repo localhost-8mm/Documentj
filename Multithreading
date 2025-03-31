@@ -4,7 +4,7 @@ SET A
 as a parameter to the constructor). The threads should display the messages continuously 
 till the user presses ctrl-c. Also display the thread information as it is running. 
 :-------------------------
- 
+ import java.util.Random;
 class MessageThread extends Thread 
 {
     private String message; 
