@@ -1,0 +1,61 @@
+1. Write a java program to create a class called FileWatcher that can be given several 
+filenames. The class should start a thread for each file name. If the file exists, the thread 
+will write a message to the console and then end. If the filw does not exist, the thread will 
+check for the existence of its file after every 5 seconds till the file gets created. 
+:------------------------- 
+
+import java.io.File;
+
+class FileWatcherThread extends Thread 
+{
+    private String fileName;
+
+    public FileWatcherThread(String fileName) 
+    {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public void run()
+     {
+        File file = new File(fileName);
+        while (true)
+         {
+            if (file.exists()) 
+            {
+                System.out.println("File " + fileName + " exists.");
+                break; // Exit the thread once the file is found
+            }
+             else
+             {
+                System.out.println("File " + fileName + " does not exist. Checking again in 3 seconds...");
+                try 
+                {
+                    Thread.sleep(3000); // Wait for 5 seconds before checking again
+                }
+                 catch (InterruptedException e)
+                 {
+                    System.err.println("Thread interrupted: " + e.getMessage());
+                    break;
+                }
+            }
+        }
+    }
+}
+
+public class filewatcher
+{
+    public static void main(String[] args)
+     {
+        if (args.length == 0)
+         {
+            System.out.println("Usage: java FileWatcher <file1> <file2> ...");
+            return;
+        }
+
+        for (String fileName : args) 
+        {
+            new FileWatcherThread(fileName).start();
+        }
+    }
+}
