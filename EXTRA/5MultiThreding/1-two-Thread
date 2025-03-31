@@ -1,0 +1,41 @@
+1. Write a program that create 2 threads – each displaying a message (Pass the message 
+as a parameter to the constructor). The threads should display the messages continuously 
+till the user presses ctrl-c. Also display the thread information as it is running. 
+:------------------------- 
+
+ 
+class MessageThread extends Thread 
+{
+    private String message; 
+    public MessageThread(String message) 
+     {
+        this.message = message;  
+    }
+
+    @Override   
+    public void run() 
+    {
+        while (true)
+         {
+            System.out.println(Thread.currentThread().getName() + " - " + message);
+            try 
+            {
+                Thread.sleep(2000); // Sleep for 2 second
+            } 
+            catch (InterruptedException e)
+             {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public class message
+{
+public static void main(String[] args) 
+    {
+        
+        new MessageThread("Hello from Thread 1").start();
+        new MessageThread("Hello from Thread 2").start();
+    }
+} 
