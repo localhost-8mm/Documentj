@@ -8,85 +8,87 @@ the client. Program should not allow duplicate cookies to be written.
 
 import java.io.*;
 import javax.servlet.*;
-import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
 
 @WebServlet("/HobbyServlet")
-public class HobbyServlet extends HttpServlet 
-{
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
-    {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+public class HobbyServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        res.setContentType("text/html");
+        PrintWriter pw = res.getWriter();
+        HttpSession session = req.getSession();
+        
+        // Get selected hobby
+        String hobby = req.getParameter("hobby");
 
-        String[] hobbies = request.getParameterValues("hobby");
+        if (hobby == null) {
+            pw.println("<html><body><h2>Please select a hobby.</h2>");
+            pw.println("<a href='hobby.html'>Go Back</a></body></html>");
+            return;
+        }
 
-        if (hobbies != null) 
-        {
-            Cookie[] cookies = request.getCookies();
-            
-            for (String hobby : hobbies) 
-            {
-                boolean exists = false;
+        // Check if cookie already exists
+        Cookie[] cookies = req.getCookies();
+        boolean exists = false;
 
-                // Check if the cookie already exists
-                if (cookies != null) 
-                {
-                    for (Cookie c : cookies)
-                     {
-                        if (c.getName().equals(hobby))
-                         {
-                            exists = true;
-                            break;
-                        }
-                    }
-                }
-
-                // If cookie does not exist, create a new one
-                if (!exists) 
-                {
-                    Cookie newCookie = new Cookie(hobby, "selected");
-                    newCookie.setMaxAge(60 * 60 * 24);
-                    response.addCookie(newCookie);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("hobby") && cookie.getValue().equals(hobby)) {
+                    exists = true;
+                    break;
                 }
             }
+        }
 
-            out.println("<html><body>");
-            out.println("<h2>Hobbies Saved:</h2>");
-            for (String hobby : hobbies) 
-            {
-                out.println("<p>" + hobby + " has been saved as your hobby.</p>");
-            }
-            out.println("<a href='hobby.html'>Go Back</a>");
-            out.println("</body></html>");
+        // Set cookie only if it doesn't exist
+        if (!exists) {
+            Cookie hobbyCookie = new Cookie("hobby", hobby);
+            hobbyCookie.setMaxAge(60 * 60 * 24); // 1 day
+            res.addCookie(hobbyCookie);
+            pw.println("<html><body><h2>Your hobby '" + hobby + "' has been saved!</h2>");
+        } else {
+            pw.println("<html><body><h2>You have already selected '" + hobby + "'!</h2>");
         }
-         else
-          {
-            out.println("<h2>No hobbies selected!</h2>");
-            out.println("<a href='hobby.html'>Go Back</a>");
-        }
+
+        pw.println("<a href='hobby.html'>Go Back</a></body></html>");
+        pw.close();
     }
 }
 
 
 
-hobby.html
 
+hobby.html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hobby Selection</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Hobby</title>
 </head>
 <body>
     <h2>Select Your Hobby</h2>
-    <form action="HobbyServlet" method="POST">
-        <input type="checkbox" name="hobby" value="Painting"> Painting<br>
-        <input type="checkbox" name="hobby" value="Drawing"> Drawing<br>
-        <input type="checkbox" name="hobby" value="Singing"> Singing<br>
-        <input type="checkbox" name="hobby" value="Swimming"> Swimming<br>
-        
+    <form method="post" action="HobbyServlet">
+        <label><input type="radio" name="hobby" value="Painting"> Painting</label><br>
+        <label><input type="radio" name="hobby" value="Drawing"> Drawing</label><br>
+        <label><input type="radio" name="hobby" value="Singing"> Singing</label><br>
+        <label><input type="radio" name="hobby" value="Swimming"> Swimming</label><br>
+        <br>
         <input type="submit" value="Submit">
         <input type="reset" value="Reset">
     </form>
 </body>
 </html>
+
+
+/YourProject
+ ├── /src
+ │    ├── HobbyServlet.java
+ │
+ ├── /webapp
+ │    ├── hobby.html
+ │
+ ├── /WEB-INF
+ │    ├── classes (Compiled Java files go here)
+
+ //////// <form method="post" action="http://localhost:8080/SessionInfo">
